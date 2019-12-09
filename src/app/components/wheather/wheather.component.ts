@@ -13,6 +13,7 @@ am4core.useTheme(am4themes_animated);
   templateUrl: './wheather.component.html',
   styleUrls: ['./wheather.component.css']
 })
+
 export class WheatherComponent implements OnInit {
   private chart: am4charts.XYChart;
   public dateNow = '';
@@ -27,19 +28,26 @@ export class WheatherComponent implements OnInit {
     }
     
     this.dateNow = day+'-'+date.getMonth()+'-'+date.getFullYear();
+   
+  }
+  
+  ngAfterViewInit() {
     var theHtmlString = "";
-    wheatherService.getWheather("27.4827916","-109.9520421").subscribe(wheather => {
-        console.log('holo=>',wheather['data']);
+    this.wheatherService.getWheather("27.4827916","-109.9520421").subscribe(wheather => {
+      this.initGraf(wheather['data']);
         wheather['data'].forEach(element => {
           theHtmlString += `<tr><th scope="row">${element.valid_date}</th><td>${element.temp}</td></tr>`; 
         });
         var lista = document.getElementById("temperatures");
         lista.innerHTML = theHtmlString;
-        console.log(theHtmlString)
+
     });
+    
   }
-  
-  ngAfterViewInit() {
+
+  initGraf(dataGraf){
+
+    console.log('grafs',dataGraf);
     this.zone.runOutsideAngular(() => {
       let chart = am4core.create("chartdiv", am4charts.XYChart);
 
@@ -47,10 +55,10 @@ export class WheatherComponent implements OnInit {
 
       let data = [];
       let visits = 10;
-      for (let i = 1; i < 366; i++) {
-        visits += Math.round((Math.random() < 0.5 ? 1 : -1) * Math.random() * 10);
-        data.push({ date: new Date(2019, 0, i), name: "name" + i, value: visits });
-      }
+      dataGraf.forEach(row => {
+        console.log(row);
+        data.push({ date: row.datetime, name: "name" + row.datetime, value: row.temp });
+      });
 
       chart.data = data;
 
@@ -85,6 +93,7 @@ export class WheatherComponent implements OnInit {
   }
 
   ngOnInit() {
+    
   }
 
   getWheatherByLatLot(data:String)
@@ -97,13 +106,13 @@ export class WheatherComponent implements OnInit {
     var theHtmlString = "";
 
     this.wheatherService.getWheather(lat,lot).subscribe(wheather => {
-      console.log('holo=>',wheather['data']);
+      this.initGraf(wheather['data']);
+
       wheather['data'].forEach(element => {
         theHtmlString += `<tr><th scope="row">${element.valid_date}</th><td>${element.temp}</td></tr>`; 
       });
       var lista = document.getElementById("temperatures");
       lista.innerHTML = theHtmlString;
-      console.log(theHtmlString)
     });
   }
 
@@ -117,38 +126,15 @@ export class WheatherComponent implements OnInit {
     var lat = cord[0];
     var lot = cord[1];
     var theHtmlString = "";
-    // return ;
+
     this.wheatherService.getWheather(lat, lot,units).subscribe(wheather => {
-      console.log('holo=>',wheather['data']);
+      this.initGraf(wheather['data']);
+
       wheather['data'].forEach(element => {
         theHtmlString += `<tr><th scope="row">${element.valid_date}</th><td>${element.temp}</td></tr>`; 
       });
       var lista = document.getElementById("temperatures");
       lista.innerHTML = theHtmlString;
-      console.log(theHtmlString)
     });
   }
-
-  // getWheatherByDate(date:string)
-  // {
-
-   
-  //   var cord = document.getElementById("cities");
-  //   cord = cord[0].value.split(',');
-
-  //   var unit = document.getElementById("units")[0].value;
-  //   var theHtmlString = "";
-
-  //   var lat = cord[0];
-  //   var lot = cord[1];
-  //   this.wheatherService.getWheather(lat, lot, unit,date).subscribe(wheather => {
-  //     console.log('holo=>',wheather['data']);
-  //     wheather['data'].forEach(element => {
-  //       theHtmlString += `<tr><th scope="row">${element.valid_date}</th><td>${element.temp}</td></tr>`; 
-  //     });
-  //     var lista = document.getElementById("temperatures");
-  //     lista.innerHTML = theHtmlString;
-  //     console.log(theHtmlString)
-  //   });
-  // }
 }
