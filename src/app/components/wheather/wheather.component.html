@@ -1,0 +1,49 @@
+<section>
+    <div class="p-5">
+        <div class="jumbotron row">
+            <div class="col-12 text-center">
+                <h2>Wheather Dashboard</h2>
+            </div>
+            <div class="col-6 float-left" id="chartdiv" style="width: 100%; height: 500px"></div>
+            <div class="col-6 float-left">
+                <div class="row col-12">
+                    <label for="cities">City</label>
+                    <select class="form-control" type="select" id="cities" name="cities" (change)="getWheatherByLatLot($event.target.value)">
+                                <option value="27.0703653,-109.4625283">Navojoa</option>
+                                <option value="27.4827916,-109.9520421" selected>Ciudad Obregon</option>
+                                <option value="30.8,-110.3833">Nogales</option>
+                                <option value="29.0667, -110.9667">Hermosillo</option>
+                              </select>
+                </div>
+                <div class="row col-12">
+                    <label for="scales">Scale</label>
+                    <select class="form-control" type="select" id="units" name="units" (change)="getWheatherByUnits($event.target.value)">
+                                    <option value="M" selected>Celsius</option>
+                                    <option value="S">Kelvin</option>
+                                    <option value="I">Fahrenheit</option>
+                                   
+                                  </select>
+                </div>
+                <div class="row col-12">
+                    <label for="date">Date</label>
+                    <input type="date" class="form-control" id="date" name="date">
+                </div>
+            </div>
+        </div>
+        <div>
+            <table class="table table-striped col-6 ml-auto mr-auto">
+                <thead>
+                    <tr>
+                        <th scope="col">Date</th>
+                        <th scope="col">Temperature</th>
+
+                    </tr>
+                </thead>
+                <tbody id="temperatures">
+
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</section>
