@@ -33,7 +33,7 @@ export class WheatherComponent implements OnInit {
   
   ngAfterViewInit() {
     var theHtmlString = "";
-    this.wheatherService.getWheather("27.4827916","-109.9520421").subscribe(wheather => {
+    this.wheatherService.getWheather("27.4827916","-109.9520421",null,15).subscribe(wheather => {
       this.initGraf(wheather['data']);
         wheather['data'].forEach(element => {
           theHtmlString += `<tr><th scope="row">${element.valid_date}</th><td>${element.temp}</td></tr>`; 
@@ -47,7 +47,6 @@ export class WheatherComponent implements OnInit {
 
   initGraf(dataGraf){
 
-    console.log('grafs',dataGraf);
     this.zone.runOutsideAngular(() => {
       let chart = am4core.create("chartdiv", am4charts.XYChart);
 
@@ -56,7 +55,6 @@ export class WheatherComponent implements OnInit {
       let data = [];
       let visits = 10;
       dataGraf.forEach(row => {
-        console.log(row);
         data.push({ date: row.datetime, name: "name" + row.datetime, value: row.temp });
       });
 
@@ -98,14 +96,17 @@ export class WheatherComponent implements OnInit {
 
   getWheatherByLatLot(data:String)
   {
+    var e = (document.getElementById("units")) as HTMLSelectElement;
+    var sel = e.selectedIndex;
+    var opt = e.options[sel];
+    var unit = opt.value;
     
-    console.log('funcion',data.split(','));
     var cord = data.split(',');
     var lat = cord[0];
     var lot = cord[1];
     var theHtmlString = "";
 
-    this.wheatherService.getWheather(lat,lot).subscribe(wheather => {
+    this.wheatherService.getWheather(lat,lot,unit,15).subscribe(wheather => {
       this.initGraf(wheather['data']);
 
       wheather['data'].forEach(element => {
@@ -118,11 +119,11 @@ export class WheatherComponent implements OnInit {
 
   getWheatherByUnits(units:string)
   {
-    
-   
-    var cord = document.getElementById("cities");
-    cord = cord[0].value.split(',');
-   
+    var e = (document.getElementById("cities")) as HTMLSelectElement;
+    var sel = e.selectedIndex;
+    var opt = e.options[sel];
+
+    var cord =  opt.value.split(',');
     var lat = cord[0];
     var lot = cord[1];
     var theHtmlString = "";
