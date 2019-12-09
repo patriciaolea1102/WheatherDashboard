@@ -16,19 +16,9 @@ am4core.useTheme(am4themes_animated);
 
 export class WheatherComponent implements OnInit {
   private chart: am4charts.XYChart;
-  public dateNow = '';
+
   constructor(private zone: NgZone,private wheatherService:WheatherService) {
 
-    var date = new Date();
-    let d = date.getDate();
-
-    if(d<10){
-      d.toString();
-      var day = `0${d.toString()}`;
-    }
-    
-    this.dateNow = day+'-'+date.getMonth()+'-'+date.getFullYear();
-   
   }
   
   ngAfterViewInit() {
@@ -45,6 +35,8 @@ export class WheatherComponent implements OnInit {
     
   }
 
+
+  //carga datos de la temperatura a la grafica
   initGraf(dataGraf){
 
     this.zone.runOutsideAngular(() => {
@@ -94,6 +86,8 @@ export class WheatherComponent implements OnInit {
     
   }
 
+  //Obtiene el clima mediante la latitud y longitud
+
   getWheatherByLatLot(data:String)
   {
     var e = (document.getElementById("units")) as HTMLSelectElement;
@@ -117,6 +111,7 @@ export class WheatherComponent implements OnInit {
     });
   }
 
+  //Obtiene el clima mediane las unidades del clima.
   getWheatherByUnits(units:string)
   {
     var e = (document.getElementById("cities")) as HTMLSelectElement;
